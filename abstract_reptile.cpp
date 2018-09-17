@@ -6,6 +6,8 @@
 AbstractReptile::AbstractReptile(QObject *parent) : QObject(parent)
 {
     manager= new QNetworkAccessManager(this);
+    connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(handleReply(QNetworkReply*));
+    this->load();
 }
 
 AbstractReptile::~AbstractReptile()
@@ -71,9 +73,29 @@ void AbstractReptile::load()
     file.close();
 }
 
+void AbstractReptile::handleReply(QNetworkReply *reply)
+{
+    if(reply->error()!=QNetworkReply::NoError)//请求错误
+    {
+        emit requestError(QString("reply error:")+reply->errorString());
+        if(this->replyError())
+        {
+            return;
+        }
+    }
+}
+
 void AbstractReptile::work()
 {
-
+    if(this->currentUrl.isEmpty())//Url无效，错误
+    {
+        emit getNextUrlError(QString("init Url is empty"));
+        if(this->analysisNextUrlError())
+        {
+            return;
+        }
+    }
+    this->manager->get(QNetworkRequest(this->currentUrl));
 }
 
 AbstractReptile::AbstractReptile(QObject *parent, QUrl &initUrl, QRegExp &analysisData, QRegExp &analysisNextUrl):QObject(parent)

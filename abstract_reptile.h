@@ -6,6 +6,8 @@
 #include <QRegExp>
 #include <QMap>
 #include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 
 class AbstractReptile : public QObject
 {
@@ -32,12 +34,14 @@ private:
     QRegExp analysisData;//数据解析规则
     QRegExp analysisNextUrl;//爬取规则
     QNetworkAccessManager * manager;//用于请求网页
+
 //==========================================
-    void replyError();
-    void analysisDataError();
-    void analysisNextUrlError();
+    //      发生错误时调用，返回true表示终止
+    virtual bool replyError(){this->save(); return true;}
+    virtual bool analysisDataError(){this->save(); return true;}
+    virtual bool analysisNextUrlError(){this->save(); return true;}
+    //========================================
 signals:
-    void errorMsg(const QString & Msg);//发生错误时报告错误
     void workFinish(const QList<QString> & data);//爬取终止时报告获取的数据
     void updateState(const QString & Msg);//更新请求Url、解析数据时报告进度
     //===================================
@@ -48,6 +52,7 @@ signals:
 
 public slots:
     void work();
+    void handleReply(QNetworkReply *reply);
 };
 
 #endif // ABSTRACTREPTILE_H
