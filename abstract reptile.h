@@ -13,7 +13,7 @@ class AbstractReptile : public QObject
 public:
     explicit AbstractReptile(QObject *parent = 0);
     AbstractReptile(QObject *parent,QUrl &initUrl,QRegExp & analysisData,QRegExp & analysisNextUrl);
-    void setCurrentUrl(QUrl &url);
+    void setCurrentUrl(QUrl &url){this->currentUrl=url;}
     void setanalysisDataRegExp(QRegExp & regExp){this->analysisData=regExp;}
     void setanalysisNextUrlRegExp(QRegExp & regExp){this->analysisNextUrl=regExp;}
     ~AbstractReptile();

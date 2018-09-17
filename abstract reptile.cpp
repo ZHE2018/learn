@@ -10,3 +10,21 @@ AbstractReptile::~AbstractReptile()
     delete this->manager;
 }
 
+void AbstractReptile::save()
+{
+
+}
+
+void AbstractReptile::load()
+{
+
+}
+
+
+
+AbstractReptile::AbstractReptile(QObject *parent, QUrl &initUrl, QRegExp &analysisData, QRegExp &analysisNextUrl):QObject(parent)
+{
+    this->currentUrl=initUrl;
+    this->analysisData=analysisData;
+    this->analysisNextUrl=analysisNextUrl;
+}
