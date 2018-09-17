@@ -1,4 +1,4 @@
-#include "abstract reptile.h"
+#include "abstract_reptile.h"
 #include <QFile>
 #include <QTextStream>
 
@@ -23,7 +23,7 @@ void AbstractReptile::save()
     }
     else
     {
-        emit this->IOError(QString("Write file error: open fall."));
+        emit IOError(QString("Write file error: open fall."));
     }
 }
 
@@ -32,7 +32,10 @@ void AbstractReptile::load()
 
 }
 
+void AbstractReptile::work()
+{
 
+}
 
 AbstractReptile::AbstractReptile(QObject *parent, QUrl &initUrl, QRegExp &analysisData, QRegExp &analysisNextUrl):QObject(parent)
 {

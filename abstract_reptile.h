@@ -37,14 +37,14 @@ private:
     void analysisDataError();
     void analysisNextUrlError();
 signals:
-    void errorMsg(QString & Msg);//发生错误时报告错误
-    void workFinish(QList<QString> & data);//爬取终止时报告获取的数据
-    void updateState(QString & Msg);//更新请求Url、解析数据时报告进度
+    void errorMsg(const QString & Msg);//发生错误时报告错误
+    void workFinish(const QList<QString> & data);//爬取终止时报告获取的数据
+    void updateState(const QString & Msg);//更新请求Url、解析数据时报告进度
     //===================================
-    void requestError(QString & msg);
-    void getDataError(QString & msg);
-    void getNextUrlError(QString & msg);
-    void IOError(QString & msg);
+    void requestError(const QString & msg);
+    void getDataError(const QString & msg);
+    void getNextUrlError(const QString & msg);
+    void IOError(const QString & msg);
 
 public slots:
     void work();
