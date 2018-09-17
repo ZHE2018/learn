@@ -23,9 +23,9 @@ public:
     virtual void save();//保存，继承是若添加数据，需要重写
     virtual void load();//读取保存，继承是若添加数据，需要重写
     //----------------
-    virtual void getData(){}
-    virtual void getNextUrl(){}
-    virtual bool finishWork(){return false;}
+    virtual void getData(const QString & text,QMap<QString,int> &data){}
+    virtual void getNextUrl(const QString & text,QUrl & Url){}
+    virtual bool finishWork(const QString & text){return false;}
 private:
     QUrl currentUrl;//当前网址
     QByteArray replyData;//当前请求收到的数据
@@ -34,11 +34,11 @@ private:
     QRegExp analysisData;//数据解析规则
     QRegExp analysisNextUrl;//爬取规则
     QNetworkAccessManager * manager;//用于请求网页
-
+    virtual QUrl captureToUrl(const QString & line)=0;
 //==========================================
     //      发生错误时调用，返回true表示终止
     virtual bool replyError(){this->save(); return true;}
-    virtual bool analysisDataError(){this->save(); return true;}
+    virtual bool analysisDataError(){return false;}
     virtual bool analysisNextUrlError(){this->save(); return true;}
     //========================================
 signals:

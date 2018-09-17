@@ -83,6 +83,90 @@ void AbstractReptile::handleReply(QNetworkReply *reply)
             return;
         }
     }
+    this->replyData=reply->readAll();
+    reply->deleteLater();
+    QString text=QString::fromLocal8Bit(this->replyData);
+    //-----------------解析网页，获得数据--------------------
+    int initCount=this->data.size();
+    if(this->analysisData.isEmpty())
+    {
+        this->getData(text,this->data);
+    }
+    else
+    {
+        QRegExp reg=this->analysisData;
+        int pos = 0;
+        int count=0;
+        while ((pos = reg.indexIn(text, pos)) != -1)
+        {
+            QString line;
+            for(int i=0;i<reg.captureCount();i++)
+            {
+                line+=reg.cap(i);
+            }
+            if(!line.isEmpty())
+            {
+                this->data.insert(line,0);
+            }
+            count++;
+            pos += reg.matchedLength();
+        }
+    }
+    if(data.size()<=initCount)
+    {
+        emit getDataError(QString("none data capture."));
+        if(analysisDataError())
+        {
+            return;
+        }
+    }
+    //-----------------解析网页，获得下一个网址---------------
+    this->allUrl.insert(this->currentUrl.url(),-1);
+    if(this->analysisNextUrl.isEmpty())
+    {
+        this->getNextUrl(text,this->currentUrl);
+    }
+    else
+    {
+        QRegExp reg=this->analysisNextUrl;
+        int pos = 0;
+        if((pos = reg.indexIn(text, pos)) != -1)
+        {
+            QString line=reg.cap(0);
+            if(!line.isEmpty())
+            {
+                this->currentUrl=this->captureToUrl(line);
+            }
+            else
+            {
+                this->currentUrl=QUrl();
+            }
+
+        }
+    }
+
+    if(currentUrl.isEmpty())
+    {
+        emit getDataError(QString("none data capture."));
+        if(analysisDataError())
+        {
+            return;
+        }
+    }
+
+    //-----------------验证终止-----------------------------
+    if(finishWork(text))
+    {
+        emit workFinish(this->data.keys());
+        return;
+    }
+    if(data.find(this->currentUrl.url())==data.end())
+    {
+        emit workFinish(this->data.keys());
+        return;
+    }
+    //----------------开始下一个网页-------------------------
+    work();
 }
 
 void AbstractReptile::work()
