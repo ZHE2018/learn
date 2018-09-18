@@ -104,11 +104,8 @@ void AbstractReptile::handleReply(QNetworkReply *reply)
         int count=0;
         while ((pos = reg.indexIn(text, pos)) != -1)
         {
-            QString line;
-            for(int i=0;i<reg.captureCount();i++)
-            {
-                line+=reg.cap(i);
-            }
+            QString line=reg.cap(0);
+
             if(!line.isEmpty())
             {
                 this->data.insert(line,0);

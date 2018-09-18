@@ -55,8 +55,11 @@ void MainWindow::updateStatus(const QString &msg)
 void MainWindow::on_finished(const QList<QString> &list)
 {
     this->ui->log->append("-----------------");
-    for(auto i:list)
+    for(const QString &i:list)
     {
-        this->ui->log->append(i);
+        QString line;
+        line=i.section(QString(" "),0,0).section(QString("\""),1,1);
+        line=line+QString("@")+i.section(QString("\""),3,3).section(QString(" "),-1,-1);
+        this->ui->log->append(line);
     }
 }
