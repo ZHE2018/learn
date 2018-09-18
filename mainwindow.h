@@ -24,7 +24,7 @@ private:
     reptile test;
 public slots:
     void updateStatus(const QString & msg);
-    void on_finished(const QStringList & list);
+    void on_finished(const QList<QString> & list);
 };
 
 #endif // MAINWINDOW_H

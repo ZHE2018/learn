@@ -59,11 +59,13 @@ void AbstractReptile::load()
         while(line!=QString(""))
         {
             allUrl.insert(line,1);
+            line=in.readLine();
         }
         line=in.readLine();
         while(!in.atEnd())
         {
             data.insert(line,1);
+            line=in.readLine();
         }
     }
     else
@@ -85,10 +87,10 @@ void AbstractReptile::handleReply(QNetworkReply *reply)
     }
     this->replyData=reply->readAll();
     reply->deleteLater();
-    QString text=QString::fromLocal8Bit(this->replyData);
+    QString text=QString::fromUtf8(this->replyData);
     //-----------------解析网页，获得数据--------------------
 
-    emit this->updateState(QString("update:request text from")+this->currentUrl.url());
+    emit this->updateState(QString("update:request text from ")+this->currentUrl.url());
 
     int initCount=this->data.size();
     if(this->analysisData.isEmpty())
@@ -170,7 +172,7 @@ void AbstractReptile::handleReply(QNetworkReply *reply)
         emit workFinish(this->data.keys());
         return;
     }
-    if(data.find(this->currentUrl.url())==data.end())
+    if(allUrl.find(this->currentUrl.url())!=allUrl.end())
     {
         emit this->updateState(QString("update:finish : same url"));
         emit workFinish(this->data.keys());

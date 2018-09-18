@@ -7,9 +7,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    qDebug()<<"start!";
     ui->setupUi(this);
+    qDebug()<<"setupUi";
     connect(&this->test,SIGNAL(updateState(QString)),this,SLOT(updateStatus(QString)));
-    connect(&this->test,SIGNAL(workFinish(QList<QString>)),this,SLOT(on_finished(QStringList)));
+    connect(&this->test,SIGNAL(workFinish(QList<QString>)),this,SLOT(on_finished(QList<QString>)));
+    qDebug()<<"构造完成";
 }
 
 MainWindow::~MainWindow()
@@ -49,7 +52,11 @@ void MainWindow::updateStatus(const QString &msg)
     ui->log->append(msg);
 }
 
-void MainWindow::on_finished(const QStringList &list)
+void MainWindow::on_finished(const QList<QString> &list)
 {
-
+    this->ui->log->append("-----------------");
+    for(auto i:list)
+    {
+        this->ui->log->append(i);
+    }
 }
