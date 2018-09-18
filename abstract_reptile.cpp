@@ -6,7 +6,7 @@
 AbstractReptile::AbstractReptile(QObject *parent) : QObject(parent)
 {
     manager= new QNetworkAccessManager(this);
-    connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(handleReply(QNetworkReply*));
+    connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(handleReply(QNetworkReply*)));
     this->load();
 }
 
@@ -87,6 +87,9 @@ void AbstractReptile::handleReply(QNetworkReply *reply)
     reply->deleteLater();
     QString text=QString::fromLocal8Bit(this->replyData);
     //-----------------解析网页，获得数据--------------------
+
+    emit this->updateState(QString("update:request text from")+this->currentUrl.url());
+
     int initCount=this->data.size();
     if(this->analysisData.isEmpty())
     {
@@ -120,6 +123,10 @@ void AbstractReptile::handleReply(QNetworkReply *reply)
             return;
         }
     }
+
+    emit this->updateState(QString("update:get data ")+QString::number(data.size()-initCount));
+
+
     //-----------------解析网页，获得下一个网址---------------
     this->allUrl.insert(this->currentUrl.url(),-1);
     if(this->analysisNextUrl.isEmpty())
@@ -135,7 +142,7 @@ void AbstractReptile::handleReply(QNetworkReply *reply)
             QString line=reg.cap(0);
             if(!line.isEmpty())
             {
-                this->currentUrl=this->captureToUrl(line);
+                this->currentUrl=this->captureToUrl(line,this->currentUrl);
             }
             else
             {
@@ -154,19 +161,25 @@ void AbstractReptile::handleReply(QNetworkReply *reply)
         }
     }
 
+    emit this->updateState(QString("update:get next url ")+this->currentUrl.url());
+
     //-----------------验证终止-----------------------------
     if(finishWork(text))
     {
+        emit this->updateState(QString("update:finish at finishWork()"));
         emit workFinish(this->data.keys());
         return;
     }
     if(data.find(this->currentUrl.url())==data.end())
     {
+        emit this->updateState(QString("update:finish : same url"));
         emit workFinish(this->data.keys());
         return;
     }
     //----------------开始下一个网页-------------------------
-    work();
+    emit this->updateState(QString("update:request url ")+this->currentUrl.url());
+
+    this->manager->get(QNetworkRequest(this->currentUrl));
 }
 
 void AbstractReptile::work()
