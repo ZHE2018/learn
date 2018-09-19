@@ -59,7 +59,8 @@ void MainWindow::on_finished(const QList<QString> &list)
     {
         QString line;
         line=i.section(QString(" "),0,0).section(QString("\""),1,1);
-        line=line+QString("@")+i.section(QString("\""),3,3).section(QString(" "),-1,-1);
+        QRegExp reg("\\[[^\\]]+\\]");
+        line=line+QString("@")+i.section(QString("\""),3,3).replace(reg,QString(""));
         this->ui->log->append(line);
     }
 }

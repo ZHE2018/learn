@@ -47,7 +47,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_initUrl"/>
+        <widget class="QLineEdit" name="lineEdit_initUrl">
+         <property name="text">
+          <string>https://www.meitulu.com/item/7579.html</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -61,7 +65,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_RegData"/>
+        <widget class="QLineEdit" name="lineEdit_RegData">
+         <property name="text">
+          <string>src=&quot;http(s)?://[^/]+/images/img/\d+/[^0]{1,2}.jpg&quot; alt=&quot;\[[^&quot;]+&quot;</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -75,7 +83,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_nextUrl"/>
+        <widget class="QLineEdit" name="lineEdit_nextUrl">
+         <property name="text">
+          <string>href=&quot;[^&quot;]*&quot;&gt;下一页</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
